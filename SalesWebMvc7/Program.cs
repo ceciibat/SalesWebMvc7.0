@@ -2,11 +2,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using SalesWebMvc7.Data;
 using System.Configuration;
-using static System.IServiceProvider;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var conn = builder.Configuration.GetConnectionString("SalesWebMvc7Context");
+//variavel auxiliar
+
 
 //builder.Services.AddDbContext<SalesWebMvc7Context>(options =>
 //    options.UseMySql((conn), builder =>
@@ -16,6 +17,7 @@ builder.Services.AddDbContext<SalesWebMvc7Context>(options =>
 {
     options.UseMySql(conn, ServerVersion.AutoDetect(conn), builder => builder.MigrationsAssembly("SalesWebMvc7"));
 });
+// aqui tem um delegate com uma expressão lambda
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
