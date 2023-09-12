@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SalesWebMvc7.Data;
 using SalesWebMvc7.Models.ViewModels;
 using System.Diagnostics;
 
@@ -8,13 +9,19 @@ namespace SalesWebMvc7.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly SalesWebMvc7Context _ctx;
+
+        public HomeController(ILogger<HomeController> logger, SalesWebMvc7Context ctx)
         {
             _logger = logger;
+            _ctx = ctx;
         }
 
         public IActionResult Index()
         {
+
+            //var teste = _ctx.Sellers.Select(c => c.Name).ToList();   // mudei sellers
+
             return View();
         }
 

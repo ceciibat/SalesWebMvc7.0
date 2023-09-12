@@ -17,12 +17,16 @@ builder.Services.AddDbContext<SalesWebMvc7Context>(options =>
 {
     options.UseMySql(conn, ServerVersion.AutoDetect(conn), builder => builder.MigrationsAssembly("SalesWebMvc7"));
 });
-// aqui tem um delegate com uma expressão lambda
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddScoped<SeedingService>();  // isso registra o serviço no sistema de injeção de dependencia da aplicação
+
 var app = builder.Build();
+
+app.Services.CreateScope().ServiceProvider.GetRequiredService<SeedingService>().Seed();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -31,6 +35,7 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
