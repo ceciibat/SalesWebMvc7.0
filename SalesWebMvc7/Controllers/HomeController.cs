@@ -9,12 +9,9 @@ namespace SalesWebMvc7.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        private readonly SalesWebMvc7Context _ctx;
-
-        public HomeController(ILogger<HomeController> logger, SalesWebMvc7Context ctx)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
-            _ctx = ctx;
         }
 
         public IActionResult Index()
