@@ -19,5 +19,12 @@ namespace SalesWebMvc7.Services
         }
         // isso vai acessar a minha fonte de dados relacionada a tabela de vendedores e converter para uma lista.
 
+        public void Insert(Sellers obj)
+        {
+            obj.Department = _context.Department.First();
+            _context.Add(obj);
+            _context.SaveChanges();
+        }
+        
     }
 }

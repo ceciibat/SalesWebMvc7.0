@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SalesWebMvc7.Models;
 using SalesWebMvc7.Services;
 
 namespace SalesWebMvc7.Controllers
@@ -18,6 +19,17 @@ namespace SalesWebMvc7.Controllers
             return View(list);
         }
 
+        public IActionResult Create()
+        {
+            return View();
+        }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(Sellers seller)
+        {
+            _sellerService.Insert(seller);
+            return RedirectToAction(nameof(Index));
+        }
     }
 }
