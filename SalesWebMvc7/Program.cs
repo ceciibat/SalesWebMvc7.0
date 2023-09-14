@@ -23,8 +23,9 @@ builder.Services.AddDbContext<SalesWebMvc7Context>(options =>
 builder.Services.AddControllersWithViews();
 
 // SERVIÇOS FEITOS POR MIM
-builder.Services.AddScoped<SeedingService>();  // isso registra o serviço no sistema de injeção de dependencia da aplicação
-builder.Services.AddScoped<SellerService>();   // agora esse serviço pode ser injetado em outras classes
+builder.Services.AddScoped<SeedingService>();       // isso registra o serviço no sistema de injeção de dependencia da aplicação
+builder.Services.AddScoped<SellerService>();        // agora esse serviço pode ser injetado em outras classes
+builder.Services.AddScoped<DepartmentService>();   
 
 var app = builder.Build();
 
