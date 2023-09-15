@@ -20,14 +20,14 @@ namespace SalesWebMvc7.Controllers
         {
             var list = _sellerService.FindAll();
             return View(list);
-        }
+        } // para aparecer todos os vendedores na tela
 
         public IActionResult Create()
         {
             var departments = _departmentService.FindAll();
             var viewModel = new SellersFormViewModel { Departments = departments };
             return View(viewModel);
-        }
+        } // para construir a caixinha com os departamentos
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -35,6 +35,46 @@ namespace SalesWebMvc7.Controllers
         {
             _sellerService.Insert(sellers);
             return RedirectToAction(nameof(Index));
+        } // para criar um novo vendedor
+
+        public IActionResult Delete(int? id)
+        {
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var obj = _sellerService.FindById(id.Value);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            return View(obj);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            _sellerService.Remove(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var obj = _sellerService.FindById(id.Value);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            return View(obj);
         }
     }
 }

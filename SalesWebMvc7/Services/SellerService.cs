@@ -1,5 +1,7 @@
-﻿using SalesWebMvc7.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using SalesWebMvc7.Data;
 using SalesWebMvc7.Models;
+using System;
 
 namespace SalesWebMvc7.Services
 {
@@ -25,5 +27,18 @@ namespace SalesWebMvc7.Services
             _context.SaveChanges();
         }
         
+        public Sellers FindById(int id)
+        {
+            return _context.Sellers.Include(obj => obj.Department).FirstOrDefault(obj => obj.Id == id);
+            // nesta abaixo = prof, acima = aluno udemy (que depois o nelio tbm fez pra aparecer o nome do dep na tela de details)
+            //_context.Sellers.FirstOrDefault(obj => obj.Id == id);
+        }
+
+        public void Remove(int id)
+        {
+            var obj = _context.Sellers.Find(id);
+            _context.Sellers.Remove(obj);
+            _context.SaveChanges();
+        }
     }
 }
