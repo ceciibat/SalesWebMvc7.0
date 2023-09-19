@@ -2,6 +2,7 @@
 using SalesWebMvc7.Models;
 using SalesWebMvc7.Models.ViewModels;
 using SalesWebMvc7.Services;
+using SalesWebMvc7.Services.Exceptions;
 
 namespace SalesWebMvc7.Controllers
 {
@@ -75,6 +76,46 @@ namespace SalesWebMvc7.Controllers
             }
 
             return View(obj);
+        }
+
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var obj = _sellerService.FindById(id.Value);
+            if(obj == null)
+            {
+                return NotFound();
+            }
+
+            List<Department> departments = _departmentService.FindAll();
+            SellersFormViewModel viewModel = new SellersFormViewModel { Sellers = obj, Departments = departments };
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Sellers sellers) 
+        {
+            if(id != sellers.Id)         // o id do vendedor que estou atualizando, não pode ser diferente do id da url da requisição
+            {
+                return BadRequest();
+            }
+            try
+            {
+                _sellerService.Update(sellers);
+                return RedirectToAction(nameof(Index));
+            }
+            catch(NotFoundException)
+            {
+                return NotFound();
+            }
+            catch (DbConcurrencyException)
+            {
+                return BadRequest();
+            }
         }
     }
 }
