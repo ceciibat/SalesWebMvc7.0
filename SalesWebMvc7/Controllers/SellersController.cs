@@ -3,6 +3,7 @@ using SalesWebMvc7.Models;
 using SalesWebMvc7.Models.ViewModels;
 using SalesWebMvc7.Services;
 using SalesWebMvc7.Services.Exceptions;
+using System.Diagnostics;
 
 namespace SalesWebMvc7.Controllers
 {
@@ -40,15 +41,15 @@ namespace SalesWebMvc7.Controllers
 
         public IActionResult Delete(int? id)
         {
-            if(id == null)
+            if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not provided"});
             }
 
             var obj = _sellerService.FindById(id.Value);
             if (obj == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
 
             return View(obj);
@@ -66,13 +67,13 @@ namespace SalesWebMvc7.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not provided" });
             }
 
             var obj = _sellerService.FindById(id.Value);
             if (obj == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
 
             return View(obj);
@@ -82,12 +83,12 @@ namespace SalesWebMvc7.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not provided" });
             }
             var obj = _sellerService.FindById(id.Value);
-            if(obj == null)
+            if (obj == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id not found" });
             }
 
             List<Department> departments = _departmentService.FindAll();
@@ -97,25 +98,31 @@ namespace SalesWebMvc7.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Sellers sellers) 
+        public IActionResult Edit(int id, Sellers sellers)
         {
-            if(id != sellers.Id)         // o id do vendedor que estou atualizando, não pode ser diferente do id da url da requisição
+            if (id != sellers.Id)         // o id do vendedor que estou atualizando, não pode ser diferente do id da url da requisição
             {
-                return BadRequest();
+                return RedirectToAction(nameof(Error), new { message = "Id mismatch" });
             }
             try
             {
                 _sellerService.Update(sellers);
                 return RedirectToAction(nameof(Index));
             }
-            catch(NotFoundException)
+            catch (ApplicationException e)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = e.Message });
             }
-            catch (DbConcurrencyException)
+        }
+
+        public IActionResult Error(string message)
+        {
+            var viewModel = new ErrorViewModel
             {
-                return BadRequest();
-            }
+                Message = message,
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+            return View(viewModel);
         }
     }
 }
