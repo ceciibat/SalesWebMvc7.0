@@ -35,6 +35,12 @@ namespace SalesWebMvc7.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Sellers sellers)
         {
+            if (!ModelState.IsValid)
+            {
+                var departments = _departmentService.FindAll();
+                var viewModel = new SellersFormViewModel { Sellers = sellers, Departments = departments };
+                return View(viewModel);
+            }
             _sellerService.Insert(sellers);
             return RedirectToAction(nameof(Index));
         } // para criar um novo vendedor
@@ -100,6 +106,12 @@ namespace SalesWebMvc7.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Sellers sellers)
         {
+            if (!ModelState.IsValid)
+            {
+                var departments = _departmentService.FindAll();
+                var viewModel = new SellersFormViewModel { Sellers = sellers, Departments = departments };
+                return View(viewModel);
+            }
             if (id != sellers.Id)         // o id do vendedor que estou atualizando, não pode ser diferente do id da url da requisição
             {
                 return RedirectToAction(nameof(Error), new { message = "Id mismatch" });
