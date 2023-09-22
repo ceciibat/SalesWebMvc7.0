@@ -23,6 +23,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<SeedingService>();       // isso registra o serviço no sistema de injeção de dependencia da aplicação
 builder.Services.AddScoped<SellerService>();        // agora esse serviço pode ser injetado em outras classes
 builder.Services.AddScoped<DepartmentService>();   
+builder.Services.AddScoped<SalesRecordService>();
 
 var app = builder.Build();
 
